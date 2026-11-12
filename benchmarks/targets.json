@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "targets": [
+    {
+      "name": "trading-vault",
+      "repository": "https://github.com/klonz484/trading-vault.git",
+      "commit": "bb38cc891e11bef80d0b45db4f78eb94ba2a7820",
+      "purpose": "TypeScript/React/Supabase application with trading-oriented logic",
+      "baseline": true
+    },
+    {
+      "name": "examforge",
+      "repository": "https://github.com/klonz484/examforge.git",
+      "commit": "8faa2caf49b12556ba62cba6e4f075301842b69f",
+      "purpose": "React/TypeScript/Vite/Supabase learning application",
+      "baseline": true
+    }
+  ],
+  "tools": {
+    "codebase_memory_mcp": {
+      "package": "codebase-memory-mcp",
+      "version": "0.12.1",
+      "license": "MIT",
+      "source": "https://github.com/DeusData/codebase-memory-mcp"
+    },
+    "graft": {
+      "package": "@nanonets/graft",
+      "version": "0.29.0",
+      "license": "MIT",
+      "source": "https://github.com/trailhq/Trail-Code",
+      "note": "Graft has been renamed to Trail-code; the legacy graft CLI/package remains available. This benchmark tests the structural graft map only."
+    }
+  }
+}
