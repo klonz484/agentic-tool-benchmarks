@@ -1,0 +1,63 @@
+name: Agentic Tool Benchmark
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/benchmark.yml"
+      - "benchmarks/**"
+      - "scripts/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agentic-tool-benchmark
+  cancel-in-progress: false
+
+jobs:
+  benchmark:
+    name: Structural benchmark (Ubuntu x86-64)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      DO_NOT_TRACK: "1"
+      GRAFT_NO_REFRESH: "1"
+      CI: "true"
+      CBM_CACHE_DIR: ${{ runner.temp }}/cbm-cache
+      GRAFT_TELEMETRY: "0"
+    steps:
+      - name: Checkout benchmark harness
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pinned tools
+        run: |
+          npm install --global codebase-memory-mcp@0.12.1 @nanonets/graft@0.29.0
+          codebase-memory-mcp --version
+          graft --version || true
+
+      - name: Run read-only benchmark
+        run: |
+          mkdir -p results
+          python scripts/run_benchmark.py             --targets benchmarks/targets.json             --output results/report.json
+
+      - name: Upload benchmark report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: |
+            results/
+          if-no-files-found: warn
+          retention-days: 30
